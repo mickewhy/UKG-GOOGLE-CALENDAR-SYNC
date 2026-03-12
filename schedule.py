@@ -133,8 +133,8 @@ def run_sync():
         if handle_security_prompts(page):
             schedule_json = fetch_schedule_data(context, page)
 
-        print("\n💻 Closing browser in 5 seconds...")
-        time.sleep(5)
+        print("\n💻 Closing browser...")
+        # time.sleep(5)
         browser.close()
         return schedule_json
 
@@ -184,7 +184,7 @@ def sync_to_google_calendar(shifts):
         print("❌ No shifts found to sync.")
         return
 
-    pst = timezone(timedelta(hours=-8))
+    # pst = timezone(timedelta(hours=-8))
 
     now = datetime.now()
     first_of_this_month = now.replace(day=1)
@@ -218,6 +218,7 @@ def sync_to_google_calendar(shifts):
             timeMin=time_min,
             timeMax=time_max,
             singleEvents=True,
+            q=CALENDAR_TAG
         )
         .execute()
     ).get("items", [])
