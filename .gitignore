@@ -1,0 +1,20 @@
+# --- Secrets & Credentials ---
+.env
+credentials.json
+token.json
+
+# --- Python Environment ---
+.venv/
+__pycache__/
+*.py[cod]
+*$py.class
+
+# --- Local Data & Logs ---
+schedule_output.txt
+commands.txt
+.vscode/
+*.log
+
+# --- System Files ---
+.DS_Store
+Thumbs.db
