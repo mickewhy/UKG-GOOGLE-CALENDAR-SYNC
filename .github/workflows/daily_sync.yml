@@ -1,0 +1,44 @@
+name: UKG to Google Calendar Sync
+
+on:
+  schedule:
+    # Runs at 22:00 UTC (3:00 PM PDT) every day
+    - cron: '0 22 * * *'
+  workflow_dispatch: 
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install playwright google-api-python-client google-auth-oauthlib python-dotenv
+          playwright install chromium
+
+      - name: Recreate JSON files from Secrets
+        run: |
+          echo '${{ secrets.CREDENTIALS_JSON }}' > credentials.json
+          echo '${{ secrets.TOKEN_JSON }}' > token.json
+
+      - name: Run Script
+        env:
+          UKG_EMAIL: ${{ secrets.UKG_EMAIL }}
+          UKG_PASSWORD: ${{ secrets.UKG_PASSWORD }}
+          UKG_LOGIN_URL: ${{ secrets.UKG_LOGIN_URL }}
+          UKG_API_URL: ${{ secrets.UKG_API_URL }}
+          GOOGLE_WORK_CALENDAR_ID: ${{ secrets.GOOGLE_WORK_CALENDAR_ID }}
+        run: python schedule.py
+
+      - name: Notify on Failure
+        if: failure()
+        run: |
+          echo "The sync failed! Check your Duo 2FA or Google Token."
+          # This will show up in your GitHub Actions logs and send you an email
