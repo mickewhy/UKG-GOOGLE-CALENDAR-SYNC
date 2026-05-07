@@ -59,9 +59,13 @@ def handle_security_prompts(page):
     time.sleep(5)
 
     try:
-        trust_button = page.locator("#trust-browser-button")
-        print("🔍 Scanning for 'Trust this device' prompt...")
-        trust_button.wait_for(state="visible", timeout=TIMEOUT)
+        # trust_button = page.locator("#trust-browser-button")
+        # print("🔍 Scanning for 'Trust this device' prompt...")
+        # trust_button.wait_for(state="visible", timeout=TIMEOUT)
+
+        page.get_by_role("heading", name="Is this your device?").wait_for(state="visible", timeout=TIMEOUT)
+        trust_button = page.get_by_role("button", name="Yes, this is my device")
+
         trust_button.click(force=True)
         print("🖱️ Clicked 'Yes, this is my device'.")
     except Exception:
